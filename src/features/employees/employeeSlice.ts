@@ -21,8 +21,49 @@ interface EmployeesState {
   employees: Employee[];
 }
 
+// --- Sample Data ---
+const sampleEmployees: Employee[] = [
+  {
+    id: "d8e7f8a0-9b1c-4d5e-8f9a-0b1c2d3e4f5a",
+    firstName: "Tony",
+    lastName: "Stark",
+    dateOfBirth: "05/29/1970",
+    startDate: "10/25/2008",
+    street: "10880 Malibu Point",
+    city: "Malibu",
+    state: "CA",
+    zipCode: "90265",
+    department: "Engineering",
+  },
+  {
+    id: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+    firstName: "Natasha",
+    lastName: "Romanoff",
+    dateOfBirth: "11/22/1984",
+    startDate: "04/20/2010",
+    street: "1 Avengers Tower",
+    city: "New York",
+    state: "NY",
+    zipCode: "10001",
+    department: "Legal",
+  },
+  {
+    id: "c9d0e1f2-3a4b-5c6d-7e8f-9a0b1c2d3e4f",
+    firstName: "Steve",
+    lastName: "Rogers",
+    dateOfBirth: "07/04/1918",
+    startDate: "07/19/2011",
+    street: "569 Leaman Place",
+    city: "Brooklyn",
+    state: "NY",
+    zipCode: "11201",
+    department: "Sales",
+  },
+];
+// --- End Sample Data ---
+
 const initialState: EmployeesState = {
-  employees: [], // Start with an empty list
+  employees: sampleEmployees, // Use sample data as initial state
 };
 
 export const employeeSlice = createSlice({
