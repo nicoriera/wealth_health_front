@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./store/store";
 
 import "./index.css";
+import "./i18n";
 
 // Importer les futures pages (nous les créerons à l'étape suivante)
 import CreateEmployeePage from "./pages/CreateEmployeePage";
