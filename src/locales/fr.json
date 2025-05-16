@@ -1,7 +1,14 @@
 {
   "welcome": "Bienvenue",
+  "title": "HRnet",
   "errors": {
     "zipCode": "Le code postal est obligatoire"
+  },
+
+  "sidebar": {
+    "home": "Tableau de bord",
+    "employeeList": "Liste des employés",
+    "createEmployee": "Créer un nouvel employé"
   },
   "header": {
     "createEmployee": "Créer un nouvel employé",
@@ -69,6 +76,10 @@
       "of": "sur",
       "previousPage": "Page précédente",
       "nextPage": "Page suivante"
-    }
+    },
+    "addButton": "Ajouter",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "paginationLabel": "Page {{page}} sur {{totalPages}}"
   }
 }

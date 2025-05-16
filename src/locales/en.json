@@ -1,5 +1,11 @@
 {
   "welcome": "Welcome",
+  "title": "HRnet",
+  "sidebar": {
+    "home": "Home",
+    "employeeList": "Employee List",
+    "createEmployee": "Create New Employee"
+  },
   "header": {
     "createEmployee": "Create New Employee",
     "employeeList": "Employee List",
@@ -63,6 +69,10 @@
       "showing": "Showing {{count}} of {{total}} results",
       "page": "Page",
       "of": "of"
-    }
+    },
+    "addButton": "Add",
+    "prev": "Previous",
+    "next": "Next",
+    "paginationLabel": "Page {{page}} of {{totalPages}}"
   }
 }
