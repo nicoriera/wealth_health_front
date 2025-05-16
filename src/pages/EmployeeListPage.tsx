@@ -90,13 +90,25 @@ const EmployeeListPage = () => {
   });
 
   return (
-    <Layout>
-      {" "}
-      {/* Wrap content with Layout */}
-      <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-        {t("employeeList.title")}
-      </h1>
-      {/* Global Filter Input */}
+    <Layout pageTitle={t("employeeList.title")}>
+      {/* Header section with title, filters, and add button */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+        {/* Filtres rapides (placeholder) */}
+        <div className="flex-1 flex gap-2 items-center justify-start md:justify-center">
+          {/* TODO: Ajouter de vrais filtres (département, statut, etc.) */}
+          <span className="text-gray-400 italic text-sm">
+            Filtres rapides à venir
+          </span>
+        </div>
+        {/* Bouton Ajouter */}
+        <button
+          className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-semibold rounded shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 transition"
+          // TODO: Naviguer vers la page de création ou ouvrir une modale
+        >
+          + {t("employeeList.addButton", "Ajouter")}
+        </button>
+      </div>
+      {/* Barre de recherche */}
       <div className="mb-4 flex justify-end">
         <div className="relative">
           <label htmlFor="globalFilter" className="sr-only">
@@ -136,10 +148,9 @@ const EmployeeListPage = () => {
           </div>
         </div>
       </div>
-      {/* Employee Table */}
+      {/* Tableau des employés */}
       <div className="relative bg-white shadow sm:rounded-lg overflow-x-auto max-h-[60vh] overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-200">
-          {/* ... thead ... */}
           <thead className="bg-gray-50 sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -172,7 +183,6 @@ const EmployeeListPage = () => {
               </tr>
             ))}
           </thead>
-          {/* ... tbody ... */}
           <tbody className="bg-white divide-y divide-gray-200">
             {table.getRowModel().rows.length === 0 ? (
               <tr>
@@ -187,7 +197,7 @@ const EmployeeListPage = () => {
               table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="even:bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors duration-150">
+                  className="even:bg-gray-50 hover:bg-indigo-50 cursor-pointer transition-colors duration-150">
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
@@ -203,99 +213,30 @@ const EmployeeListPage = () => {
             )}
           </tbody>
         </table>
-      </div>
-      {/* Pagination Controls */}
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 text-sm text-gray-600">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span>{t("employeeList.pagination.rows")}</span>
-            <select
-              value={table.getState().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
-              }}
-              className="p-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:border-indigo-500 focus:ring-opacity-50">
-              {[10, 25, 50, 100].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  {pageSize}
-                </option>
-              ))}
-            </select>
+        {/* Pagination stylée */}
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-t border-gray-200">
+          <div className="flex-1 flex items-center justify-between">
+            <span className="text-sm text-gray-600">
+              {t("employeeList.paginationLabel", {
+                page: pagination.pageIndex + 1,
+                totalPages: table.getPageCount(),
+              })}
+            </span>
+            <div className="flex gap-2">
+              <button
+                className="px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-indigo-50 disabled:opacity-50"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}>
+                {t("employeeList.prev")}
+              </button>
+              <button
+                className="px-3 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:bg-indigo-50 disabled:opacity-50"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}>
+                {t("employeeList.next")}
+              </button>
+            </div>
           </div>
-          <span className="text-gray-500">
-            {" "}
-            |{" "}
-            {t("employeeList.pagination.showing", {
-              count: table.getRowModel().rows.length,
-              total: table.getCoreRowModel().rows.length,
-            })}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1">
-          <span>
-            {t("employeeList.pagination.page")}{" "}
-            <strong>
-              {table.getPageCount() > 0
-                ? table.getState().pagination.pageIndex + 1
-                : 0}{" "}
-              {t("employeeList.pagination.of")} {table.getPageCount()}
-            </strong>
-          </span>
-          <span className="ml-2">
-            <button
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-              className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50"
-              aria-label={t("employeeList.pagination.firstPage")}>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50 ml-1"
-              aria-label={t("employeeList.pagination.previousPage")}>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50 ml-1"
-              aria-label={t("employeeList.pagination.nextPage")}>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-              className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50 ml-1"
-              aria-label={t("employeeList.pagination.lastPage")}>
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414zm6 0a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L14.586 10l-4.293-4.293a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </span>
         </div>
       </div>
     </Layout>
