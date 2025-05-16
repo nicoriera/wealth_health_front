@@ -18,3 +18,13 @@
 .animate-fade-in-scale {
   animation: fadeInScale 0.2s ease-out forwards;
 }
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  position: static;
+}
