@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom"; // Use NavLink for active styling
+import { FiGlobe } from "react-icons/fi";
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,6 +10,12 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   // Adjusted active style for NavLink
   const activeClassName = "text-indigo-600 font-semibold"; // Changed color to primary
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = () => {
+    const newLang = i18n.language === "en" ? "fr" : "en";
+    i18n.changeLanguage(newLang);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -29,7 +37,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   isActive ? activeClassName : ""
                 }`
               }>
-              Create Employee
+              {t("header.createEmployee")}
             </NavLink>
             <NavLink
               to="/employee-list"
@@ -38,8 +46,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   isActive ? activeClassName : ""
                 }`
               }>
-              View Current Employees
+              {t("header.employeeList")}
             </NavLink>
+          </div>
+          <div className="flex items-center">
+            <button
+              className="group flex items-center px-3 py-1 border border-gray-300 rounded hover:border-indigo-600 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors transition-border"
+              onClick={handleLanguageChange}
+              aria-label={t("header.language")}
+              title={t("header.language")}>
+              <FiGlobe className="inline-block mr-2 text-lg transition-transform duration-200 group-hover:rotate-6" />
+              <span className="uppercase font-medium">{i18n.language}</span>
+            </button>
           </div>
         </nav>
       </header>

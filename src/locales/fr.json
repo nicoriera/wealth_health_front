@@ -1,3 +1,74 @@
 {
-  "welcome": "Bienvenue"
+  "welcome": "Bienvenue",
+  "errors": {
+    "zipCode": "Le code postal est obligatoire"
+  },
+  "header": {
+    "createEmployee": "Créer un nouvel employé",
+    "employeeList": "Liste des employés",
+    "language": "Français"
+  },
+  "createEmployee": {
+    "title": "Créer un nouvel employé",
+    "sections": {
+      "personalInformation": "Informations personnelles",
+      "address": "Adresse",
+      "department": "Service"
+    },
+    "fields": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "dateOfBirth": "Date de naissance",
+      "startDate": "Date de début",
+      "street": "Rue",
+      "city": "Ville",
+      "state": "État",
+      "zipCode": "Code postal",
+      "department": "Service"
+    },
+    "buttons": {
+      "save": "Enregistrer l'employé"
+    },
+    "modal": {
+      "title": "Succès !",
+      "message": "Employé créé avec succès !"
+    },
+    "validation": {
+      "firstNameRequired": "Le prénom est obligatoire",
+      "lastNameRequired": "Le nom est obligatoire",
+      "dateOfBirthRequired": "La date de naissance est obligatoire",
+      "startDateRequired": "La date de début est obligatoire",
+      "streetRequired": "La rue est obligatoire",
+      "cityRequired": "La ville est obligatoire",
+      "stateRequired": "L'état est obligatoire",
+      "zipCodeRequired": "Le code postal est obligatoire",
+      "departmentRequired": "Le service est obligatoire",
+      "selectDepartment": "Sélectionnez un service"
+    }
+  },
+  "employeeList": {
+    "title": "Employés actuels",
+    "searchPlaceholder": "Recherche…",
+    "table": {
+      "noEmployees": "Aucun employé trouvé.",
+      "noEmployeesFiltered": "Aucun employé trouvé correspondant au filtre.",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "startDate": "Date de début",
+      "department": "Service",
+      "dateOfBirth": "Date de naissance",
+      "street": "Rue",
+      "city": "Ville",
+      "state": "État",
+      "zipCode": "Code postal"
+    },
+    "pagination": {
+      "rows": "Lignes :",
+      "showing": "Affichage de {{count}} sur {{total}} résultats",
+      "page": "Page",
+      "of": "sur",
+      "previousPage": "Page précédente",
+      "nextPage": "Page suivante"
+    }
+  }
 }

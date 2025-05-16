@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 // import { Link } from 'react-router-dom'; // Link is now in Layout
 import { useSelector } from "react-redux";
 import {
@@ -13,35 +13,67 @@ import {
   SortingState,
   PaginationState,
 } from "@tanstack/react-table";
+import { useTranslation } from "react-i18next";
 import Layout from "../components/Layout"; // Import Layout
 import { selectEmployees } from "../features/employees/employeeSlice";
 import type { RootState } from "../store/store";
 import type { Employee } from "../features/employees/employeeSlice";
 
-// ... columnHelper and columns definition ...
-const columnHelper = createColumnHelper<Employee>();
-const columns = [
-  columnHelper.accessor("firstName", { header: "First Name" }),
-  columnHelper.accessor("lastName", { header: "Last Name" }),
-  columnHelper.accessor("startDate", { header: "Start Date" }),
-  columnHelper.accessor("department", { header: "Department" }),
-  columnHelper.accessor("dateOfBirth", { header: "Date of Birth" }),
-  columnHelper.accessor("street", { header: "Street" }),
-  columnHelper.accessor("city", { header: "City" }),
-  columnHelper.accessor("state", { header: "State" }),
-  columnHelper.accessor("zipCode", { header: "Zip Code" }),
-];
+// Add a debouncing hook for smoother filter UX
+function useDebounce<T>(value: T, delay = 300): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+}
 
 const EmployeeListPage = () => {
+  const { t } = useTranslation();
+
   // ... state, selector, table setup ...
   const employees = useSelector((state: RootState) => selectEmployees(state));
   const data = useMemo(() => employees, [employees]);
   const [sorting, setSorting] = useState<SortingState>([]);
+  // Local input state for filter and debounced value
+  const [filterInput, setFilterInput] = useState("");
+  const debouncedFilterInput = useDebounce(filterInput, 300);
   const [globalFilter, setGlobalFilter] = useState("");
+  // Sync debounced input to table filter state
+  useEffect(() => {
+    setGlobalFilter(debouncedFilterInput);
+  }, [debouncedFilterInput]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
+
+  // ... columnHelper and columns definition ...
+  const columnHelper = createColumnHelper<Employee>();
+  const columns = [
+    columnHelper.accessor("firstName", {
+      header: t("employeeList.table.firstName"),
+    }),
+    columnHelper.accessor("lastName", {
+      header: t("employeeList.table.lastName"),
+    }),
+    columnHelper.accessor("startDate", {
+      header: t("employeeList.table.startDate"),
+    }),
+    columnHelper.accessor("department", {
+      header: t("employeeList.table.department"),
+    }),
+    columnHelper.accessor("dateOfBirth", {
+      header: t("employeeList.table.dateOfBirth"),
+    }),
+    columnHelper.accessor("street", { header: t("employeeList.table.street") }),
+    columnHelper.accessor("city", { header: t("employeeList.table.city") }),
+    columnHelper.accessor("state", { header: t("employeeList.table.state") }),
+    columnHelper.accessor("zipCode", {
+      header: t("employeeList.table.zipCode"),
+    }),
+  ];
 
   const table = useReactTable({
     data,
@@ -62,7 +94,7 @@ const EmployeeListPage = () => {
       {" "}
       {/* Wrap content with Layout */}
       <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-        Current Employees
+        {t("employeeList.title")}
       </h1>
       {/* Global Filter Input */}
       <div className="mb-4 flex justify-end">
@@ -73,11 +105,20 @@ const EmployeeListPage = () => {
           <input
             type="text"
             id="globalFilter"
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
+            value={filterInput}
+            onChange={(e) => setFilterInput(e.target.value)}
             className="p-2 pl-9 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 focus:ring-opacity-50"
-            placeholder="Search..."
+            placeholder={t("employeeList.searchPlaceholder")}
           />
+          {/* Clear button */}
+          {filterInput && (
+            <button
+              onClick={() => setFilterInput("")}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
+              aria-label="Clear filter">
+              &#10005;
+            </button>
+          )}
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg
               className="w-4 h-4 text-gray-400"
@@ -96,12 +137,10 @@ const EmployeeListPage = () => {
         </div>
       </div>
       {/* Employee Table */}
-      <div className="bg-white overflow-x-auto shadow sm:rounded-lg">
+      <div className="relative bg-white shadow sm:rounded-lg overflow-x-auto max-h-[60vh] overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-200">
           {/* ... thead ... */}
-          <thead className="bg-gray-50">
-            {" "}
-            {/* Lighter header bg */}
+          <thead className="bg-gray-50 sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -140,12 +179,15 @@ const EmployeeListPage = () => {
                 <td
                   colSpan={columns.length}
                   className="px-4 py-5 text-sm text-gray-500 text-center">
-                  No employees found{globalFilter ? " matching filter." : "."}
+                  {t("employeeList.table.noEmployees")}
+                  {globalFilter ? " matching filter." : "."}
                 </td>
               </tr>
             ) : (
               table.getRowModel().rows.map((row) => (
-                <tr key={row.id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  key={row.id}
+                  className="even:bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors duration-150">
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
@@ -166,7 +208,7 @@ const EmployeeListPage = () => {
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 text-sm text-gray-600">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span>Rows:</span>
+            <span>{t("employeeList.pagination.rows")}</span>
             <select
               value={table.getState().pagination.pageSize}
               onChange={(e) => {
@@ -182,19 +224,22 @@ const EmployeeListPage = () => {
           </div>
           <span className="text-gray-500">
             {" "}
-            | Showing {table.getRowModel().rows.length} of{" "}
-            {table.getCoreRowModel().rows.length} results
+            |{" "}
+            {t("employeeList.pagination.showing", {
+              count: table.getRowModel().rows.length,
+              total: table.getCoreRowModel().rows.length,
+            })}
           </span>
         </div>
 
         <div className="flex items-center gap-1">
           <span>
-            Page{" "}
+            {t("employeeList.pagination.page")}{" "}
             <strong>
               {table.getPageCount() > 0
                 ? table.getState().pagination.pageIndex + 1
                 : 0}{" "}
-              of {table.getPageCount()}
+              {t("employeeList.pagination.of")} {table.getPageCount()}
             </strong>
           </span>
           <span className="ml-2">
@@ -202,7 +247,7 @@ const EmployeeListPage = () => {
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
               className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50"
-              aria-label="Go to first page">
+              aria-label={t("employeeList.pagination.firstPage")}>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -215,7 +260,7 @@ const EmployeeListPage = () => {
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
               className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50 ml-1"
-              aria-label="Previous page">
+              aria-label={t("employeeList.pagination.previousPage")}>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -228,7 +273,7 @@ const EmployeeListPage = () => {
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
               className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50 ml-1"
-              aria-label="Next page">
+              aria-label={t("employeeList.pagination.nextPage")}>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -241,7 +286,7 @@ const EmployeeListPage = () => {
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
               className="p-1.5 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-300 focus:ring-opacity-50 ml-1"
-              aria-label="Go to last page">
+              aria-label={t("employeeList.pagination.lastPage")}>
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"

@@ -1,5 +1,6 @@
 // import { Link } from "react-router-dom"; // Remove unused import
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useState } from "react"; // Import useState
 import DatePicker from "react-datepicker";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
@@ -35,6 +36,7 @@ const departmentOptions = departments.map((dept) => ({
 }));
 
 const CreateEmployeePage = () => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const dispatch = useDispatch<AppDispatch>(); // Get dispatch function
   const {
@@ -86,13 +88,13 @@ const CreateEmployeePage = () => {
   return (
     <Layout>
       <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-        Create New Employee
+        {t("createEmployee.title")}
       </h1>
 
       <div className="bg-white p-6 md:p-8 rounded-lg shadow">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <h2 className="text-xl font-semibold text-gray-700 border-b border-gray-200 pb-3 mb-5">
-            Personal Information
+            {t("createEmployee.sections.personalInformation")}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* First Name */}
@@ -100,13 +102,13 @@ const CreateEmployeePage = () => {
               <label
                 htmlFor="firstName"
                 className="block text-sm font-medium text-gray-700 mb-1">
-                First Name
+                {t("createEmployee.fields.firstName")}
               </label>
               <input
                 type="text"
                 id="firstName"
                 {...register("firstName", {
-                  required: "First name is required",
+                  required: t("createEmployee.validation.firstNameRequired"),
                 })}
                 className={`mt-0 block w-full px-3 py-2 border ${
                   errors.firstName ? "border-red-500" : "border-gray-300"
@@ -128,12 +130,14 @@ const CreateEmployeePage = () => {
               <label
                 htmlFor="lastName"
                 className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name
+                {t("createEmployee.fields.lastName")}
               </label>
               <input
                 type="text"
                 id="lastName"
-                {...register("lastName", { required: "Last name is required" })}
+                {...register("lastName", {
+                  required: t("createEmployee.validation.lastNameRequired"),
+                })}
                 className={`mt-0 block w-full px-3 py-2 border ${
                   errors.lastName ? "border-red-500" : "border-gray-300"
                 } rounded-md shadow-sm focus:outline-none focus:ring-2 ${
@@ -154,12 +158,14 @@ const CreateEmployeePage = () => {
               <label
                 htmlFor="dateOfBirth"
                 className="block text-sm font-medium text-gray-700 mb-1">
-                Date of Birth
+                {t("createEmployee.fields.dateOfBirth")}
               </label>
               <Controller
                 control={control}
                 name="dateOfBirth"
-                rules={{ required: "Date of birth is required" }}
+                rules={{
+                  required: t("createEmployee.validation.dateOfBirthRequired"),
+                }}
                 render={({ field }) => (
                   <DatePicker
                     id="dateOfBirth"
@@ -193,12 +199,14 @@ const CreateEmployeePage = () => {
               <label
                 htmlFor="startDate"
                 className="block text-sm font-medium text-gray-700 mb-1">
-                Start Date
+                {t("createEmployee.fields.startDate")}
               </label>
               <Controller
                 control={control}
                 name="startDate"
-                rules={{ required: "Start date is required" }}
+                rules={{
+                  required: t("createEmployee.validation.startDateRequired"),
+                }}
                 render={({ field }) => (
                   <DatePicker
                     id="startDate"
@@ -230,7 +238,7 @@ const CreateEmployeePage = () => {
 
           {/* Address Section */}
           <h2 className="text-xl font-semibold text-gray-700 border-b border-gray-200 pb-3 mb-5">
-            Address
+            {t("createEmployee.sections.address")}
           </h2>
           <fieldset className="space-y-4">
             {/* Street */}
@@ -238,12 +246,14 @@ const CreateEmployeePage = () => {
               <label
                 htmlFor="street"
                 className="block text-sm font-medium text-gray-700 mb-1">
-                Street
+                {t("createEmployee.fields.street")}
               </label>
               <input
                 type="text"
                 id="street"
-                {...register("street", { required: "Street is required" })}
+                {...register("street", {
+                  required: t("createEmployee.validation.streetRequired"),
+                })}
                 className={`mt-0 block w-full px-3 py-2 border ${
                   errors.street ? "border-red-500" : "border-gray-300"
                 } rounded-md shadow-sm focus:outline-none focus:ring-2 ${
@@ -265,12 +275,14 @@ const CreateEmployeePage = () => {
                 <label
                   htmlFor="city"
                   className="block text-sm font-medium text-gray-700 mb-1">
-                  City
+                  {t("createEmployee.fields.city")}
                 </label>
                 <input
                   type="text"
                   id="city"
-                  {...register("city", { required: "City is required" })}
+                  {...register("city", {
+                    required: t("createEmployee.validation.cityRequired"),
+                  })}
                   className={`mt-0 block w-full px-3 py-2 border ${
                     errors.city ? "border-red-500" : "border-gray-300"
                   } rounded-md shadow-sm focus:outline-none focus:ring-2 ${
@@ -291,14 +303,16 @@ const CreateEmployeePage = () => {
                 <Controller
                   name="state"
                   control={control}
-                  rules={{ required: "State is required" }}
+                  rules={{
+                    required: t("createEmployee.validation.stateRequired"),
+                  }}
                   render={({ field }) => (
                     <CustomSelect
                       id="state"
-                      label="State"
+                      label={t("createEmployee.fields.state")}
                       options={stateOptions}
                       {...field}
-                      placeholder="Select State"
+                      placeholder={t("createEmployee.fields.state")}
                       error={errors.state?.message}
                     />
                   )}
@@ -310,12 +324,14 @@ const CreateEmployeePage = () => {
                 <label
                   htmlFor="zipCode"
                   className="block text-sm font-medium text-gray-700 mb-1">
-                  Zip Code
+                  {t("createEmployee.fields.zipCode")}
                 </label>
                 <input
                   type="text"
                   id="zipCode"
-                  {...register("zipCode", { required: "Zip code is required" })}
+                  {...register("zipCode", {
+                    required: t("createEmployee.validation.zipCodeRequired"),
+                  })}
                   className={`mt-0 block w-full px-3 py-2 border ${
                     errors.zipCode ? "border-red-500" : "border-gray-300"
                   } rounded-md shadow-sm focus:outline-none focus:ring-2 ${
@@ -335,20 +351,22 @@ const CreateEmployeePage = () => {
 
           {/* Department Section */}
           <h2 className="text-xl font-semibold text-gray-700 border-b border-gray-200 pb-3 mb-5">
-            Department
+            {t("createEmployee.sections.department")}
           </h2>
           <div>
             <Controller
               name="department"
               control={control}
-              rules={{ required: "Department is required" }}
+              rules={{
+                required: t("createEmployee.validation.departmentRequired"),
+              }}
               render={({ field }) => (
                 <CustomSelect
                   id="department"
-                  label="Department"
+                  label={t("createEmployee.fields.department")}
                   options={departmentOptions}
                   {...field}
-                  placeholder="Select Department"
+                  placeholder={t("createEmployee.fields.department")}
                   error={errors.department?.message}
                 />
               )}
@@ -360,7 +378,7 @@ const CreateEmployeePage = () => {
               <button
                 type="submit"
                 className="inline-flex justify-center py-2 px-5 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500">
-                Save Employee
+                {t("createEmployee.buttons.save")}
               </button>
             </div>
           </div>
@@ -368,8 +386,11 @@ const CreateEmployeePage = () => {
       </div>
 
       {/* Modal Component */}
-      <Modal isOpen={isModalOpen} onClose={closeModal} title="Success!">
-        <p>Employee successfully created!</p>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={t("createEmployee.modal.title")}>
+        <p>{t("createEmployee.modal.message")}</p>
         {/* You could add a button inside the modal to navigate or just rely on the close button/overlay */}
       </Modal>
     </Layout>

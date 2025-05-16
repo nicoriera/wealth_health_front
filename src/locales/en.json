@@ -1,3 +1,68 @@
 {
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "header": {
+    "createEmployee": "Create New Employee",
+    "employeeList": "Employee List",
+    "language": "English"
+  },
+  "createEmployee": {
+    "title": "Create New Employee",
+    "sections": {
+      "personalInformation": "Personal Information",
+      "address": "Address",
+      "department": "Department"
+    },
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "dateOfBirth": "Date of Birth",
+      "startDate": "Start Date",
+      "street": "Street",
+      "city": "City",
+      "state": "State",
+      "zipCode": "Zip Code",
+      "department": "Department"
+    },
+    "buttons": {
+      "save": "Save Employee"
+    },
+    "modal": {
+      "title": "Success!",
+      "message": "Employee successfully created!"
+    },
+    "validation": {
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "dateOfBirthRequired": "Date of birth is required",
+      "startDateRequired": "Start date is required",
+      "streetRequired": "Street is required",
+      "cityRequired": "City is required",
+      "stateRequired": "State is required",
+      "zipCodeRequired": "Zip code is required",
+      "departmentRequired": "Department is required"
+    }
+  },
+  "employeeList": {
+    "title": "Current Employees",
+    "searchPlaceholder": "Search...",
+    "table": {
+      "noEmployees": "No employees found.",
+      "noEmployeesFiltered": "No employees found matching filter.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "startDate": "Start Date",
+      "department": "Department",
+      "dateOfBirth": "Date of Birth",
+      "street": "Street",
+      "city": "City",
+      "state": "State",
+      "zipCode": "Zip Code"
+    },
+    "pagination": {
+      "rows": "Rows:",
+      "showing": "Showing {{count}} of {{total}} results",
+      "page": "Page",
+      "of": "of"
+    }
+  }
 }
